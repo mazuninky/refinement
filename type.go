@@ -1,19 +1,14 @@
-package refinement
+package blood_contracts_go
 
 import (
 	"errors"
-	. "github.com/mazuninky/blood-contracts-go/core"
 )
 
 type RType struct {
-	mapFunc MapFunction
-	//Pack(value interface{}) RefinementTypeBox
-	//And(rType RefinementType) RefinementType
-	//Pipe(rType RefinementType) RefinementType
-	//Or(rType RefinementType) RefinementType
+	mapFunc mapFunction
 }
 
-func NewType(mapFunc MapFunction) RefinementType {
+func NewType(mapFunc mapFunction) RefinementType {
 	rType := RType{
 		mapFunc: mapFunc,
 	}
@@ -29,7 +24,7 @@ func (base *RType) IsValid(value interface{}) bool {
 	return true
 }
 
-func (base *RType) GetMapFunction() MapFunction {
+func (base *RType) getMapFunction() mapFunction {
 	return base.mapFunc
 }
 
@@ -44,7 +39,7 @@ func (base *RType) And(rt RefinementType) RefinementType {
 			return nil, firstError
 		}
 
-		secondValue, secondError := rt.GetMapFunction()(value)
+		secondValue, secondError := rt.getMapFunction()(value)
 		if secondError != nil {
 			return nil, secondError
 		}
@@ -65,7 +60,7 @@ func (base *RType) Or(rt RefinementType) RefinementType {
 			return firstValue, nil
 		}
 
-		secondValue, secondError := rt.GetMapFunction()(value)
+		secondValue, secondError := rt.getMapFunction()(value)
 		if secondError == nil {
 			return secondValue, nil
 		}
@@ -84,7 +79,7 @@ func (base *RType) Pipe(rt RefinementType) RefinementType {
 			return nil, firstError
 		}
 
-		return rt.GetMapFunction()(firstValue)
+		return rt.getMapFunction()(firstValue)
 	}
 
 	return NewType(mapFunc)

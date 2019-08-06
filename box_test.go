@@ -1,4 +1,4 @@
-package refinement
+package blood_contracts_go
 
 import (
 	"errors"

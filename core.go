@@ -1,4 +1,4 @@
-package core
+package blood_contracts_go
 
 type RefinementType interface {
 	Pack(value interface{}) RefinementTypeBox
@@ -7,7 +7,7 @@ type RefinementType interface {
 	Pipe(rType RefinementType) RefinementType
 	Or(rType RefinementType) RefinementType
 
-	GetMapFunction() MapFunction
+	getMapFunction() mapFunction
 }
 
 type RefinementTypeBox interface {

@@ -1,0 +1,10 @@
+language: go
+
+go:
+  - 1.12.x
+
+install:
+  - go get -u golang.org/x/vgo
+
+script:
+  - vgo test -v -race -coverprofile=coverage.txt -covermode=atomic ./...

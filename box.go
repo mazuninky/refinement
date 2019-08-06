@@ -1,16 +1,14 @@
-package refinement
-
-import(. "github.com/mazuninky/blood-contracts-go/core")
+package blood_contracts_go
 
 type RTBox struct {
-	mapFunc  MapFunction
+	mapFunc  mapFunction
 	isMapped bool
 	value    interface{}
 	result   interface{}
 	err      error
 }
 
-func NewBox(mapFunc MapFunction, value interface{}) RefinementTypeBox {
+func NewBox(mapFunc mapFunction, value interface{}) RefinementTypeBox {
 	box := RTBox{
 		mapFunc:  mapFunc,
 		isMapped: false,
