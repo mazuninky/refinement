@@ -1,14 +1,14 @@
 package blood_contracts_go
 
 type RTBox struct {
-	mapFunc  mapFunction
+	mapFunc  MapFunction
 	isMapped bool
 	value    interface{}
 	result   interface{}
 	err      error
 }
 
-func NewBox(mapFunc mapFunction, value interface{}) RefinementTypeBox {
+func NewBox(mapFunc MapFunction, value interface{}) RefinementTypeBox {
 	box := RTBox{
 		mapFunc:  mapFunc,
 		isMapped: false,

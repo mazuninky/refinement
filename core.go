@@ -7,7 +7,7 @@ type RefinementType interface {
 	Pipe(rType RefinementType) RefinementType
 	Or(rType RefinementType) RefinementType
 
-	getMapFunction() mapFunction
+	getMapFunction() MapFunction
 }
 
 type RefinementTypeBox interface {

@@ -2,13 +2,14 @@ package blood_contracts_go
 
 import (
 	"errors"
+	"regexp"
 )
 
 type RType struct {
-	mapFunc mapFunction
+	mapFunc MapFunction
 }
 
-func NewType(mapFunc mapFunction) RefinementType {
+func NewType(mapFunc MapFunction) RefinementType {
 	rType := RType{
 		mapFunc: mapFunc,
 	}
@@ -24,7 +25,7 @@ func (base *RType) IsValid(value interface{}) bool {
 	return true
 }
 
-func (base *RType) getMapFunction() mapFunction {
+func (base *RType) getMapFunction() MapFunction {
 	return base.mapFunc
 }
 
@@ -83,4 +84,25 @@ func (base *RType) Pipe(rt RefinementType) RefinementType {
 	}
 
 	return NewType(mapFunc)
+}
+
+
+// Custom types
+
+func MustCreateRegexType(regex string) RefinementType {
+	reg, err := regexp.Compile(regex)
+	if err != nil {
+		panic(err)
+	}
+	regexMapFunc := createRegexMapFunc(reg)
+	return NewType(regexMapFunc)
+}
+
+func NewRegexType(regex string) (RefinementType, error) {
+	reg, err := regexp.Compile(regex)
+	if err != nil {
+		return nil, err
+	}
+	regexMapFunc := createRegexMapFunc(reg)
+	return NewType(regexMapFunc), nil
 }
