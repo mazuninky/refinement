@@ -6,6 +6,7 @@ type RefinementType interface {
 	And(rType RefinementType) RefinementType
 	Pipe(rType RefinementType) RefinementType
 	Or(rType RefinementType) RefinementType
+	Map(mapFunc MapFunction) RefinementType
 
 	getMapFunction() MapFunction
 }

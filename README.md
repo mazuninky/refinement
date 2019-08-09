@@ -13,12 +13,36 @@ $ go get -u github.com/mazuninky/blood-contracts-go
 2. Import it in your code:
 
 ```go
-import "github.com/mazuninky/blood-contracts-go"
+import contracts "github.com/mazuninky/blood-contracts-go"
 ```
 
-## Refinment Data Type
+## Refinement Data Type
 
-TODO Write instruction
+### Create type
+
+```go
+numberType := contracts.MustNewRegexType(`[0-9]+`)
+```
+
+### Pipe
+
+TODO
+
+### Or
+
+TODO
+
+### And
+
+TODO
+
+### Pack
+
+TODO
+
+### Unpack
+
+TODO
 
 ## License
 
