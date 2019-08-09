@@ -27,3 +27,65 @@ func createRegexMapFunc(regexp *regexp.Regexp) MapFunction {
 		}
 	}
 }
+
+func createMinMapFunc(container Container, include bool) MapFunction {
+	return func(value interface{}) (interface{}, error) {
+		toCompare, err := NewContainer(value)
+		if err != nil {
+			return nil, err
+		}
+
+		comparator := Compare(container, toCompare)
+		if include && comparator == EqualValue || comparator == LessValue {
+			return value, nil
+		}
+
+		var comparatorType ComparerType
+		if include {
+			comparatorType = BiggerOrEqualComparer
+		} else {
+			comparatorType = BiggerComparer
+		}
+
+		return nil, NewNumberCompareError(container, comparatorType, comparator, toCompare)
+	}
+}
+
+func createMaxMapFunc(container Container, include bool) MapFunction {
+	return func(value interface{}) (interface{}, error) {
+		toCompare, err := NewContainer(value)
+		if err != nil {
+			return nil, err
+		}
+
+		comparator := Compare(container, toCompare)
+		if include && comparator == EqualValue || comparator == BiggerValue {
+			return value, nil
+		}
+
+		var comparatorType ComparerType
+		if include {
+			comparatorType = LessOrEqualComparer
+		} else {
+			comparatorType = LessComparer
+		}
+
+		return nil, NewNumberCompareError(container, comparatorType, comparator, toCompare)
+	}
+}
+
+func createEqualMapFunc(container Container) MapFunction {
+	return func(value interface{}) (interface{}, error) {
+		toCompare, err := NewContainer(value)
+		if err != nil {
+			return nil, err
+		}
+
+		comparator := Compare(container, toCompare)
+		if comparator == EqualValue {
+			return value, nil
+		}
+
+		return nil, NewNumberCompareError(container, EqualComparer, comparator, toCompare)
+	}
+}

@@ -21,6 +21,10 @@ func TestRType_IsValidWithPositiveMapFunc(t *testing.T) {
 	g.Expect(rType.IsValid(5)).Should(BeTrue())
 }
 
-func TestRType_Or(t *testing.T) {
-
-}
+//func TestRType_Or(t *testing.T) {
+//	g := NewGomegaWithT(t)
+//
+//	positiveType := NewType(positiveMapFunc)
+//
+//	//g.Expect(rType.IsValid(5)).Should(BeTrue())
+//}

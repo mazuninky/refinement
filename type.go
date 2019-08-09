@@ -86,10 +86,11 @@ func (base *RType) Pipe(rt RefinementType) RefinementType {
 	return NewType(mapFunc)
 }
 
+// String
 
-// Custom types
+// Regex
 
-func MustCreateRegexType(regex string) RefinementType {
+func MustNewRegexType(regex string) RefinementType {
 	reg, err := regexp.Compile(regex)
 	if err != nil {
 		panic(err)
@@ -105,4 +106,69 @@ func NewRegexType(regex string) (RefinementType, error) {
 	}
 	regexMapFunc := createRegexMapFunc(reg)
 	return NewType(regexMapFunc), nil
+}
+
+// Number
+
+func NewNumberMin(minValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(minValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMinMapFunc(container, true)
+	return NewType(mapFunc), nil
+}
+
+func NewNumberMinExclude(minValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(minValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMinMapFunc(container, false)
+	return NewType(mapFunc), nil
+}
+
+func NewNumberMax(maxValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(maxValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMaxMapFunc(container, true)
+	return NewType(mapFunc), nil
+}
+
+func NewNumberMaxExclude(maxValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(maxValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMinMapFunc(container, false)
+	return NewType(mapFunc), nil
+}
+
+func NewNumberEqual(equal interface{}) (RefinementType, error) {
+	container, err := NewContainer(equal)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createEqualMapFunc(container)
+	return NewType(mapFunc), nil
+}
+
+
+// Struct
+
+//func NewStructType(structType interface{}) {
+//
+//}
+
+// Function
+
+func NewFunctionType(mapFunc MapFunction) RefinementType {
+	return NewType(mapFunc)
 }
