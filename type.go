@@ -160,15 +160,18 @@ func NewNumberEqual(equal interface{}) (RefinementType, error) {
 	return NewType(mapFunc), nil
 }
 
-
 // Struct
 
-//func NewStructType(structType interface{}) {
-//
-//}
+func NewStructType(valueToTypeMap map[string]RefinementType) {
+
+}
+
+func NewStructTypeFromBasis(typeBasis []RefinementType) {
+
+}
 
 // Function
 
-func NewFunctionType(mapFunc MapFunction) RefinementType {
+func NewMapType(mapFunc MapFunction) RefinementType {
 	return NewType(mapFunc)
 }

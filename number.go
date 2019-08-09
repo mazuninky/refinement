@@ -188,6 +188,6 @@ func Compare(first Container, second Container) CompareResult {
 	case *FloatContainer:
 		return first.CompareFloat(secondTyped.value)
 	default:
-		panic("unknow Container implementation")
+		panic("unknown Container implementation")
 	}
 }

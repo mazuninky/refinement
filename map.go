@@ -1,6 +1,7 @@
 package blood_contracts_go
 
 import (
+	"encoding/json"
 	"errors"
 	"reflect"
 	"regexp"
@@ -87,5 +88,35 @@ func createEqualMapFunc(container Container) MapFunction {
 		}
 
 		return nil, NewNumberCompareError(container, EqualComparer, comparator, toCompare)
+	}
+}
+
+var jsonExpectedTypes = []reflect.Kind{
+	reflect.String, reflect.Array,
+}
+
+func createJsonUnmarshalMapFunc(jsonType interface{}) MapFunction {
+	return func(value interface{}) (interface{}, error) {
+		var data []byte
+		switch typedValue := value.(type) {
+		case string:
+			data = []byte(typedValue)
+			break
+		case []byte:
+			data = typedValue
+			break
+		default:
+			return nil, NewMismatchTypeErrorFromInterface(jsonExpectedTypes, data)
+		}
+
+		clone := reflect.New(reflect.ValueOf(jsonType).Elem().Type()).Interface()
+		err := json.Unmarshal(data, clone)
+
+		// TODO Map to own error
+		if err != nil {
+			return nil, err
+		}
+
+		return clone, nil
 	}
 }
