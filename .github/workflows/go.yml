@@ -20,4 +20,13 @@ jobs:
         run: go get -u
 
       - name: Build
-        run: go build -v .
+        run: go build -v ./...
+
+      - name: Run tests
+        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic .
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage
+          path: coverage.txt
