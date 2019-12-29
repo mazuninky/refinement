@@ -1,5 +1,7 @@
 package refiment
 
+type MapFunction func(interface{}) (interface{}, error)
+
 type RefinementType interface {
 	// Pack value into the type container
 	Pack(value interface{}) RefinementTypeBox

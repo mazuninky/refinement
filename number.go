@@ -1,8 +1,227 @@
 package refiment
 
 import (
+	"fmt"
 	"reflect"
 )
+
+// Error section
+
+type ComparerType uint
+
+const (
+	EqualComparer ComparerType = iota
+	LessOrEqualComparer
+	LessComparer
+	BiggerComparer
+	BiggerOrEqualComparer
+)
+
+type NumberCompareError struct {
+	Container     Container
+	Comparer      ComparerType
+	CompareResult CompareResult
+	CompareWith   Container
+}
+
+func operationFromComparerType(comparer ComparerType) string {
+	switch comparer {
+	case EqualComparer:
+		return "=="
+	case LessOrEqualComparer:
+		return "<="
+	case LessComparer:
+		return "<"
+	case BiggerComparer:
+		return "<"
+	case BiggerOrEqualComparer:
+		return ">"
+	}
+
+	panic("unknown comparer type")
+}
+
+func (e *NumberCompareError) Error() string {
+	return fmt.Sprintf("Number comparing error. Expected %f %v %f", e.Container.Value(),
+		operationFromComparerType(e.Comparer), e.CompareWith.Value())
+}
+
+func NewNumberCompareError(container Container, comparer ComparerType, compareResult CompareResult, compareWith Container) *NumberCompareError {
+	return &NumberCompareError{
+		Container:     container,
+		Comparer:      comparer,
+		CompareResult: compareResult,
+		CompareWith:   compareWith,
+	}
+}
+
+// Map section
+
+func createMinMapFunc(container Container, include bool) MapFunction {
+	return func(value interface{}) (interface{}, error) {
+		toCompare, err := NewContainer(value)
+		if err != nil {
+			return nil, err
+		}
+
+		comparator := Compare(container, toCompare)
+		if include && comparator == EqualValue || comparator == LessValue {
+			return value, nil
+		}
+
+		var comparatorType ComparerType
+		if include {
+			comparatorType = BiggerOrEqualComparer
+		} else {
+			comparatorType = BiggerComparer
+		}
+
+		return nil, NewNumberCompareError(container, comparatorType, comparator, toCompare)
+	}
+}
+
+func createMaxMapFunc(container Container, include bool) MapFunction {
+	return func(value interface{}) (interface{}, error) {
+		toCompare, err := NewContainer(value)
+		if err != nil {
+			return nil, err
+		}
+
+		comparator := Compare(container, toCompare)
+		if include && comparator == EqualValue || comparator == BiggerValue {
+			return value, nil
+		}
+
+		var comparatorType ComparerType
+		if include {
+			comparatorType = LessOrEqualComparer
+		} else {
+			comparatorType = LessComparer
+		}
+
+		return nil, NewNumberCompareError(container, comparatorType, comparator, toCompare)
+	}
+}
+
+func createEqualMapFunc(container Container) MapFunction {
+	return func(value interface{}) (interface{}, error) {
+		toCompare, err := NewContainer(value)
+		if err != nil {
+			return nil, err
+		}
+
+		comparator := Compare(container, toCompare)
+		if comparator == EqualValue {
+			return value, nil
+		}
+
+		return nil, NewNumberCompareError(container, EqualComparer, comparator, toCompare)
+	}
+}
+
+// Type section
+
+func NewNumberMin(minValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(minValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMinMapFunc(container, true)
+	return NewType(mapFunc), nil
+}
+
+func MustNewNumberMin(minValue interface{}) RefinementType {
+	container, err := NewContainer(minValue)
+	if err != nil {
+		panic(err)
+	}
+
+	mapFunc := createMinMapFunc(container, true)
+	return NewType(mapFunc)
+}
+
+func NewNumberMinExclude(minValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(minValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMinMapFunc(container, false)
+	return NewType(mapFunc), nil
+}
+
+func MustNewNumberMinExclude(minValue interface{}) RefinementType {
+	container, err := NewContainer(minValue)
+	if err != nil {
+		panic(err)
+	}
+
+	mapFunc := createMinMapFunc(container, false)
+	return NewType(mapFunc)
+}
+
+func NewNumberMax(maxValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(maxValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMaxMapFunc(container, true)
+	return NewType(mapFunc), nil
+}
+
+func MustNewNumberMax(maxValue interface{}) RefinementType {
+	container, err := NewContainer(maxValue)
+	if err != nil {
+		panic(err)
+	}
+
+	mapFunc := createMaxMapFunc(container, true)
+	return NewType(mapFunc)
+}
+
+func NewNumberMaxExclude(maxValue interface{}) (RefinementType, error) {
+	container, err := NewContainer(maxValue)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createMinMapFunc(container, false)
+	return NewType(mapFunc), nil
+}
+
+func MustNewNumberMaxExclude(maxValue interface{}) RefinementType {
+	container, err := NewContainer(maxValue)
+	if err != nil {
+		panic(err)
+	}
+
+	mapFunc := createMinMapFunc(container, false)
+	return NewType(mapFunc)
+}
+
+func NewNumberEqual(equal interface{}) (RefinementType, error) {
+	container, err := NewContainer(equal)
+	if err != nil {
+		return nil, err
+	}
+
+	mapFunc := createEqualMapFunc(container)
+	return NewType(mapFunc), nil
+}
+
+func MustNewNumberEqual(equal interface{}) RefinementType {
+	container, err := NewContainer(equal)
+	if err != nil {
+		panic(err)
+	}
+
+	mapFunc := createEqualMapFunc(container)
+	return NewType(mapFunc)
+}
+
+// Type section
 
 type CompareResult int
 

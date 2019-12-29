@@ -1,6 +1,6 @@
 package main
 
-import contracts "github.com/mazuninky/blood-contracts-go"
+import refinement "github.com/mazuninky/refinement"
 
 const (
 	emailRegex = `(?i)([A-Za-z0-9!#$%&'*+\/=?^_{|.}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)`
@@ -8,8 +8,8 @@ const (
 )
 
 func main() {
-	emailType := contracts.MustNewRegexType(emailRegex)
-	phoneType := contracts.MustNewRegexType(phoneRegex)
+	emailType := refinement.MustNewRegexType(emailRegex)
+	phoneType := refinement.MustNewRegexType(phoneRegex)
 	loginType := phoneType.Or(emailType)
 
 	loginPack := loginType.Pack("test@gmail.com")
