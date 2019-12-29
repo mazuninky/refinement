@@ -1,4 +1,4 @@
-package refiment
+package _old
 
 import (
 	"errors"
@@ -33,6 +33,31 @@ func (base *RType) Pack(value interface{}) RefinementTypeBox {
 	return NewBox(base.mapFunc, value)
 }
 
+func (base *RType) And(rt RefinementType) RefinementType {
+	mapFunc := func(value interface{}) (interface{}, error) {
+		firstValue, firstError := base.mapFunc(value)
+		if firstError != nil {
+			return nil, firstError
+		}
+
+		secondValue, secondError := rt.getMapFunction()(value)
+		if secondError != nil {
+			return nil, secondError
+		}
+
+		if firstValue == secondValue {
+			return firstValue, nil
+		}
+
+		return []interface{}{
+			firstValue,
+			secondValue,
+		}, nil
+	}
+
+	return NewType(mapFunc)
+}
+
 func (base *RType) Or(rt RefinementType) RefinementType {
 	mapFunc := func(value interface{}) (interface{}, error) {
 		firstValue, firstError := base.mapFunc(value)
@@ -46,7 +71,7 @@ func (base *RType) Or(rt RefinementType) RefinementType {
 		}
 
 		// TODO Choose exception
-		return nil, errors.New("can't find a type")
+		return nil, errors.New("can't find type for both")
 	}
 
 	return NewType(mapFunc)

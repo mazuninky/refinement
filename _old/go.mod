@@ -1,4 +1,4 @@
-module github.com/mazuninky/refinement
+module github.com/mazuninky/blood-contracts-go
 
 go 1.13
 

@@ -1,14 +1,10 @@
-package refiment
+package _old
 
 import (
 	"encoding/json"
-	_ "encoding/json"
 	"errors"
-	_"errors"
 	"reflect"
-	_"reflect"
 	"regexp"
-	_ "regexp"
 )
 
 type MapFunction func(interface{}) (interface{}, error)

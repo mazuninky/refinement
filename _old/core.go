@@ -1,8 +1,9 @@
-package refiment
+package _old
 
 type RefinementType interface {
-	// Pack value into the type container
 	Pack(value interface{}) RefinementTypeBox
+	IsValid(value interface{}) bool
+	And(rType RefinementType) RefinementType
 	Pipe(rType RefinementType) RefinementType
 	Or(rType RefinementType) RefinementType
 	Map(mapFunc MapFunction) RefinementType
@@ -12,6 +13,5 @@ type RefinementType interface {
 
 type RefinementTypeBox interface {
 	Unpack() (interface{}, error)
-	Map(mapFunc MapFunction) RefinementTypeBox
-	IsValid() bool
+	//IsValid(value interface{}) bool
 }

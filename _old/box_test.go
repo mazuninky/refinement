@@ -1,4 +1,4 @@
-package blood_contracts_go
+package _old
 
 import (
 	. "github.com/onsi/gomega"

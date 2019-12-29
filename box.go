@@ -1,11 +1,12 @@
-package blood_contracts_go
+package refiment
 
 type RTBox struct {
 	mapFunc  MapFunction
 	isMapped bool
 	value    interface{}
-	result   interface{}
-	err      error
+	// Calculated result
+	result interface{}
+	err    error
 }
 
 func NewBox(mapFunc MapFunction, value interface{}) RefinementTypeBox {
@@ -26,4 +27,24 @@ func (rTBox *RTBox) Unpack() (interface{}, error) {
 	}
 
 	return rTBox.result, rTBox.err
+}
+
+func (rTBox *RTBox) IsValid() bool {
+	_, err := rTBox.Unpack()
+
+	return err != nil
+}
+
+func (rTBox *RTBox) Map(mapFunc MapFunction) RefinementTypeBox {
+	baseMapFunc := rTBox.mapFunc
+	nextMapFunc := func(value interface{}) (interface{}, error) {
+		baseResult, err := baseMapFunc(value)
+		if err != nil {
+			return nil, err
+		}
+
+		return mapFunc(baseResult)
+	}
+
+	return NewBox(nextMapFunc, rTBox.value)
 }
