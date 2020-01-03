@@ -5,6 +5,10 @@ import (
 	"reflect"
 )
 
+type CompositeError struct {
+	Errors []error
+}
+
 type MismatchTypeError struct {
 	Expected []reflect.Kind
 	Got      reflect.Kind

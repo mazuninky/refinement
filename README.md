@@ -1,19 +1,19 @@
 [![Build Status](https://travis-ci.com/mazuninky/blood-contracts-go.svg?branch=master)](https://travis-ci.com/mazuninky/blood-contracts-go)
 
-# BloodContracts::Go
+# Refinement types
 
 ## Installation
 
 1. Just go get it:
 
 ```sh
-$ go get -u github.com/mazuninky/blood-contracts-go
+$ go get -u github.com/mazuninky/refinement
 ```
 
 2. Import it in your code:
 
 ```go
-import contracts "github.com/mazuninky/blood-contracts-go"
+import refinement "github.com/mazuninky/refinement"
 ```
 
 ## Refinement Data Type
@@ -21,26 +21,29 @@ import contracts "github.com/mazuninky/blood-contracts-go"
 ### Create type
 
 ```go
-numberType := contracts.MustNewRegexType(`[0-9]+`)
+numberType := refinement.MustNewRegexType(`[0-9]+`)
 ```
 
-### Pipe
+### Pack and unpack
 
-TODO
+```go
+numberPack := numberType.Pack("45")
+number, err := numberPack.Unpack()
+if err != nil {
+    panic(err)
+}
+println(number)
+```
 
 ### Or
 
-TODO
+```go
+emailType := refinement.MustNewRegexType(emailRegex)
+phoneType := refinement.MustNewRegexType(phoneRegex)
+loginType := phoneType.Or(emailType)
+```
 
-### And
-
-TODO
-
-### Pack
-
-TODO
-
-### Unpack
+### Pipe
 
 TODO
 
